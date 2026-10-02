@@ -4,16 +4,10 @@ import { Link } from 'react-router-dom'
 import { errorMessage, rolesApi, STATUSES, usersApi, type Role, type Status, type User } from '../api'
 import { formatDateTime, formatPhone, initials, roleLabel, STATUS_LABEL } from '../lib/format'
 import { generateTempPassword, isPasswordComplex, PASSWORD_RULES } from '../lib/password'
+import { rolesFor } from '../lib/roles'
 import { useAsync } from '../lib/useAsync'
 import { toast } from './Toast'
 import { Button, CopyButton, EmptyState, ErrorBanner, Field, Modal, PasswordField, Select, Spinner, StatusBadge } from './ui'
-
-/** Roles a platform admin can give someone in this car wash (never platform roles). */
-function rolesFor(roles: Role[], carWashId: string | null) {
-  return roles.filter(
-    (r) => r.name !== 'SUPER_ADMIN' && r.name !== 'CUSTOMER' && (r.carWashId === null || r.carWashId === carWashId),
-  )
-}
 
 type Props = {
   users: User[]
@@ -59,7 +53,9 @@ export function UserTable({ users, carWashId, loading, error, onRetry, onChanged
                   <div className="person">
                     <span className="avatar avatar-sm">{initials(u.name)}</span>
                     <div>
-                      <strong>{u.name}</strong>
+                      <Link to={`/users/${u.id}`} className="person-link">
+                        {u.name}
+                      </Link>
                       <div className="muted">@{u.username}</div>
                     </div>
                   </div>
@@ -105,7 +101,7 @@ export function UserTable({ users, carWashId, loading, error, onRetry, onChanged
   )
 }
 
-function EditUserModal({ user, roles, onClose, onSaved }: { user: User; roles: Role[]; onClose: () => void; onSaved: () => void }) {
+export function EditUserModal({ user, roles, onClose, onSaved }: { user: User; roles: Role[]; onClose: () => void; onSaved: () => void }) {
   const [name, setName] = useState(user.name)
   const [phone, setPhone] = useState(user.phone ?? '')
   const [email, setEmail] = useState(user.email ?? '')
@@ -170,7 +166,7 @@ function EditUserModal({ user, roles, onClose, onSaved }: { user: User; roles: R
   )
 }
 
-function ResetPasswordModal({ user, onClose, onDone }: { user: User; onClose: () => void; onDone: () => void }) {
+export function ResetPasswordModal({ user, onClose, onDone }: { user: User; onClose: () => void; onDone: () => void }) {
   const [password, setPassword] = useState(generateTempPassword)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)

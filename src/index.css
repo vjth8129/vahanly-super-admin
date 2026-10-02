@@ -661,6 +661,14 @@ a {
 .cell-wash {
   min-width: 150px;
 }
+.person-link {
+  font-weight: 700;
+  color: var(--text);
+}
+.person-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
 .person {
   display: flex;
   align-items: center;
@@ -1073,4 +1081,24 @@ a.stat:hover {
     transform: translateY(8px);
     opacity: 0;
   }
+}
+
+.danger-zone {
+  border-color: color-mix(in srgb, var(--danger) 35%, var(--border));
+}
+.danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.danger-row p {
+  margin: 2px 0 0;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
 }

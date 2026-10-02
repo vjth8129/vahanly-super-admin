@@ -67,8 +67,8 @@ export type User = {
   mustChangePassword: boolean
   lastLoginAt: string | null
   createdAt: string
-  role?: { id: string; name: string }
-  carWash?: { id: string; name: string } | null
+  role?: { id: string; name: string; carWashId?: string | null }
+  carWash?: { id: string; name: string; status?: Status } | null
 }
 
 export type Role = { id: string; name: string; description: string | null; carWashId: string | null; isSystem: boolean }
@@ -110,12 +110,15 @@ export const carWashesApi = {
 export const usersApi = {
   list: (q: { page?: number; limit?: number; search?: string; status?: Status; carWashId?: string } = {}) =>
     http.list<User>('/users', q),
+  get: (id: string) => http.get<User>(`/users/${id}`),
   create: (body: NewUser) => http.post<User>('/users', body),
   update: (id: string, body: { name?: string; email?: string | null; phone?: string; roleId?: string }) =>
     http.patch<User>(`/users/${id}`, body),
   setStatus: (id: string, status: Status) => http.patch<User>(`/users/${id}/status`, { status }),
   resetPassword: (id: string, newPassword: string) =>
     http.post<unknown>(`/users/${id}/reset-password`, { newPassword }),
+  /** Soft delete: the user loses access and disappears from lists. */
+  remove: (id: string) => http.delete<unknown>(`/users/${id}`),
 }
 
 export const rolesApi = {

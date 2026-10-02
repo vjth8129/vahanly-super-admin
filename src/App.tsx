@@ -11,6 +11,7 @@ import { DashboardPage } from './pages/Dashboard'
 import { LoginPage } from './pages/Login'
 import { OnboardPage } from './pages/Onboard'
 import { ProfilePage } from './pages/Profile'
+import { UserDetailPage } from './pages/UserDetail'
 import { UsersPage } from './pages/Users'
 
 /** Signed-in admins only; a platform admin with an admin-set password must change it first. */
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
             { path: '/car-washes/new', element: <OnboardPage /> },
             { path: '/car-washes/:id', element: <CarWashDetailPage /> },
             { path: '/users', element: <UsersPage /> },
+            { path: '/users/:id', element: <UserDetailPage /> },
             { path: '/profile', element: <ProfilePage /> },
           ],
         },
