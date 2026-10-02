@@ -31,7 +31,7 @@ export function LoginPage() {
     <div className="auth-page">
       <form className="auth-card" onSubmit={submit}>
         <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" width={72} height={72} className="auth-logo" />
-        <h1>Car Wash Admin</h1>
+        <h1>VandiWash Admin</h1>
         <p className="muted">Sign in to manage car washes on the platform.</p>
 
         {error && (

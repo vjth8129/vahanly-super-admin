@@ -29,7 +29,7 @@ export function Layout() {
         <div className="brand">
           <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" width={36} height={36} />
           <div>
-            <strong>Car Wash</strong>
+            <strong>VandiWash</strong>
             <span>Admin portal</span>
           </div>
         </div>
@@ -62,7 +62,7 @@ export function Layout() {
             <Icon name="menu" size={22} />
           </button>
           <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" width={28} height={28} />
-          <strong>Car Wash Admin</strong>
+          <strong>VandiWash Admin</strong>
         </div>
         <main className="content">
           <Outlet />

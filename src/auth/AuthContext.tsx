@@ -15,7 +15,7 @@ type AuthValue = {
 
 /** Only platform admins use this portal; car wash staff use the mobile app. */
 const PLATFORM_ADMIN_ROLE = 'SUPER_ADMIN'
-const NOT_ADMIN_MESSAGE = 'This portal is for platform admins. Car wash staff should use the mobile app.'
+const NOT_ADMIN_MESSAGE = 'This portal is for platform admins. Car wash owners and staff should use the VandiWash app.'
 
 const AuthContext = createContext<AuthValue | null>(null)
 

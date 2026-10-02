@@ -1,6 +1,6 @@
-# Car Wash Admin Portal
+# VandiWash Admin Portal
 
-Web portal for **platform admins** (`SUPER_ADMIN`) of the Car Wash platform. Car wash
+Web portal for **platform admins** (`SUPER_ADMIN`) of the VandiWash platform. Car wash
 owners and staff use the mobile app; this portal is where the platform team:
 
 - sees platform numbers (car washes by status, users, orders),

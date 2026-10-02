@@ -59,7 +59,7 @@ export function OnboardPage() {
           </Link>
         }
         title="Onboard a car wash"
-        subtitle="Creates the car wash and its owner account together. The owner signs in to the mobile app with their mobile number and adds their own staff."
+        subtitle="Creates the car wash and its owner account together. The owner signs in to the VandiWash app with their mobile number and adds their own staff."
       />
       <form onSubmit={submit} className="stack-lg">
         {error && (
@@ -132,7 +132,7 @@ export function OnboardPage() {
 function OnboardingDone({ carWash, password }: { carWash: OnboardedCarWash; password: string }) {
   const navigate = useNavigate()
   const owner = carWash.owner!
-  const shareText = `Car Wash app sign-in for ${carWash.name}\nMobile number: ${formatPhone(owner.phone)}\nTemporary password: ${password}\nYou'll be asked to choose your own password when you first sign in.`
+  const shareText = `VandiWash app sign-in for ${carWash.name}\nMobile number: ${formatPhone(owner.phone)}\nTemporary password: ${password}\nYou'll be asked to choose your own password when you first sign in.`
   return (
     <>
       <PageHeader title={`${carWash.name} is ready`} subtitle="Share these sign-in details with the owner privately. The temporary password isn’t shown again." />
