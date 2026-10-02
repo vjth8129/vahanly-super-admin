@@ -101,7 +101,12 @@ sudo rm -rf /var/www/carwash-admin/admin-old
 REMOTE
 
 echo "==> Checking"
-code=$(curl -s -o /dev/null -w '%{http_code}' "https://$EC2_HOST/admin/")
+# nginx reloads gracefully, so give it a few seconds to pick up the new config.
+for _ in 1 2 3 4 5 6; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "https://$EC2_HOST/admin/")
+  [ "$code" = 200 ] && break
+  sleep 2
+done
 echo "GET https://$EC2_HOST/admin/ -> $code"
 [ "$code" = 200 ]
 echo "==> Done. https://$EC2_HOST/admin/"
