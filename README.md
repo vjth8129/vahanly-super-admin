@@ -36,7 +36,7 @@ Run the API locally on port 5000 (see the API repo), then:
 ```bash
 npm install
 npm run dev          # http://localhost:5174/admin/  (proxies /api to localhost:5000)
-API_PROXY=https://3-110-172-236.nip.io npm run dev   # or against the live API
+API_PROXY=https://65-1-30-38.nip.io npm run dev   # or against the live API
 ```
 
 ```bash
@@ -47,7 +47,7 @@ npm run lint
 ## Deploy (AWS)
 
 The portal is static files served by the nginx that already fronts the API on the
-EC2 instance, at **https://3-110-172-236.nip.io/admin/**.
+EC2 instance, at **https://65-1-30-38.nip.io/admin/**.
 
 ```bash
 EC2_INSTANCE_ID=i-08c2b6c26f77abbd8 ./scripts/deploy-ec2.sh   # uses your AWS CLI credentials

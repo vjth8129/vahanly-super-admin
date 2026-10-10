@@ -7,7 +7,7 @@
 #   SSH_KEY=~/carwash-deploy-key.pem ./scripts/deploy-ec2.sh       # or a .pem key
 #
 # Env vars (defaults are for this deployment):
-#   EC2_HOST   - instance hostname (default: 3-110-172-236.nip.io)
+#   EC2_HOST   - instance hostname (default: 65-1-30-38.nip.io)
 #   EC2_USER   - SSH user (default: ubuntu)
 #   NGINX_SITE - nginx site file holding the API's server blocks
 #                (default: the enabled site that proxies to 127.0.0.1:5000)
@@ -17,7 +17,7 @@
 
 set -euo pipefail
 
-EC2_HOST="${EC2_HOST:-3-110-172-236.nip.io}"
+EC2_HOST="${EC2_HOST:-65-1-30-38.nip.io}"
 EC2_USER="${EC2_USER:-ubuntu}"
 EC2_INSTANCE_ID="${EC2_INSTANCE_ID:-}"
 SSH_KEY="${SSH_KEY:-}"
