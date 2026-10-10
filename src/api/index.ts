@@ -121,6 +121,26 @@ export const usersApi = {
   remove: (id: string) => http.delete<unknown>(`/users/${id}`),
 }
 
+/** How a vehicle is used (Private, Taxi, ...); each car wash sets a service rate per category. */
+export type VehicleCategory = {
+  id: string
+  code: string
+  name: string
+  description: string | null
+  status: 'ACTIVE' | 'INACTIVE'
+  sortOrder: number
+  createdAt: string
+}
+
+export type VehicleCategoryInput = { name: string; description?: string | null; sortOrder?: number }
+
+export const vehicleCategoriesApi = {
+  list: () => http.get<VehicleCategory[]>('/vehicle-categories', { includeInactive: 'true' }),
+  create: (body: VehicleCategoryInput) => http.post<VehicleCategory>('/vehicle-categories', body),
+  update: (id: string, body: Partial<VehicleCategoryInput> & { status?: 'ACTIVE' | 'INACTIVE' }) =>
+    http.patch<VehicleCategory>(`/vehicle-categories/${id}`, body),
+}
+
 export const rolesApi = {
   list: () => http.list<Role>('/roles'),
 }

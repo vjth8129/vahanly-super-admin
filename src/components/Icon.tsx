@@ -25,6 +25,7 @@ const PATHS = {
   receipt: 'M4 2v20l3-2 3 2 3-2 3 2 3-2 2 2V2l-2 2-3-2-3 2-3-2-3 2zM8 8h8M8 12h8M8 16h5',
   edit: 'M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z',
   menu: 'M3 6h18M3 12h18M3 18h18',
+  car: 'M5 17H3v-5l2-5h14l2 5v5h-2M3 12h18M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9 17h6',
 } as const
 
 export type IconName = keyof typeof PATHS

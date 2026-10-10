@@ -9,6 +9,7 @@ const NAV: { to: string; label: string; icon: IconName; end?: boolean }[] = [
   { to: '/', label: 'Dashboard', icon: 'grid', end: true },
   { to: '/car-washes', label: 'Car washes', icon: 'building' },
   { to: '/users', label: 'Users', icon: 'users' },
+  { to: '/vehicle-types', label: 'Vehicle types', icon: 'car' },
   { to: '/profile', label: 'Profile', icon: 'user' },
 ]
 

@@ -13,6 +13,7 @@ import { OnboardPage } from './pages/Onboard'
 import { ProfilePage } from './pages/Profile'
 import { UserDetailPage } from './pages/UserDetail'
 import { UsersPage } from './pages/Users'
+import { VehicleTypesPage } from './pages/VehicleTypes'
 
 /** Signed-in admins only; a platform admin with an admin-set password must change it first. */
 function RequireAdmin() {
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
             { path: '/car-washes/:id', element: <CarWashDetailPage /> },
             { path: '/users', element: <UsersPage /> },
             { path: '/users/:id', element: <UserDetailPage /> },
+            { path: '/vehicle-types', element: <VehicleTypesPage /> },
             { path: '/profile', element: <ProfilePage /> },
           ],
         },
