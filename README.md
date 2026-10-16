@@ -49,6 +49,18 @@ npm run lint
 The portal is static files served by the nginx that already fronts the API on the
 EC2 instance, at **https://65-1-30-38.nip.io/admin/**.
 
+Easiest - one interactive script that shows the IAM permissions it needs, asks for an
+access key + secret, finds the stack's server (or offers to create the whole stack via
+`car-wash-apis/scripts/aws-deploy.sh` if there isn't one), then publishes:
+
+```bash
+./scripts/aws-deploy.sh                    # prompts for keys, stack name, region
+./scripts/aws-deploy.sh --show-permissions # just print the IAM policy
+```
+
+Use the same stack name/region the API stack was created with (default `carwash`,
+`ap-south-1`). Or, if you already know the instance:
+
 ```bash
 EC2_INSTANCE_ID=i-08c2b6c26f77abbd8 ./scripts/deploy-ec2.sh   # uses your AWS CLI credentials
 # or

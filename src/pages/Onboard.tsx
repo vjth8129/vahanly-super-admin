@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { carWashesApi, errorMessage, type OnboardedCarWash } from '../api'
 import { CarWashProfileFields } from '../components/CarWashProfileFields'
-import { EMPTY_PROFILE, suggestCode, toProfileBody, type ProfileForm } from '../lib/carWashProfile'
+import { EMPTY_PROFILE, profileError, suggestCode, toProfileBody, type ProfileForm } from '../lib/carWashProfile'
 import { Icon } from '../components/Icon'
 import { toast } from '../components/Toast'
 import { Button, Card, CopyButton, Field, PageHeader, PasswordField } from '../components/ui'
@@ -21,6 +21,8 @@ export function OnboardPage() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
+    const problem = profileError(profile)
+    if (problem) return setError(problem)
     if (owner.phone.replace(/\D/g, '').length < 10) return setError('Enter the owner’s mobile number — they sign in with it.')
     if (!isPasswordComplex(owner.password)) return setError(`Temporary password: ${PASSWORD_RULES}`)
     setBusy(true)

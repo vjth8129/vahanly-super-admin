@@ -11,6 +11,7 @@ import { DashboardPage } from './pages/Dashboard'
 import { LoginPage } from './pages/Login'
 import { OnboardPage } from './pages/Onboard'
 import { ProfilePage } from './pages/Profile'
+import { SignUpsPage } from './pages/SignUps'
 import { UserDetailPage } from './pages/UserDetail'
 import { UsersPage } from './pages/Users'
 import { VehicleTypesPage } from './pages/VehicleTypes'
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
             { path: '/car-washes', element: <CarWashesPage /> },
             { path: '/car-washes/new', element: <OnboardPage /> },
             { path: '/car-washes/:id', element: <CarWashDetailPage /> },
+            { path: '/sign-ups', element: <SignUpsPage /> },
             { path: '/users', element: <UsersPage /> },
             { path: '/users/:id', element: <UserDetailPage /> },
             { path: '/vehicle-types', element: <VehicleTypesPage /> },

@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode } from 'react'
 
-import type { Status } from '../api'
+import type { CarWashStatus } from '../api'
 import { STATUS_LABEL } from '../lib/format'
 import { Icon, type IconName } from './Icon'
 
@@ -111,7 +111,7 @@ export function Select({ label, value, onChange, options, hint, required }: Sele
 
 // ---- Display --------------------------------------------------------------------
 
-export function StatusBadge({ status }: { status: Status }) {
+export function StatusBadge({ status }: { status: CarWashStatus }) {
   return <span className={`badge badge-${status.toLowerCase()}`}>{STATUS_LABEL[status]}</span>
 }
 

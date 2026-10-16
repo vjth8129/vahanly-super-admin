@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { carWashesApi, STATUSES, type Status } from '../api'
+import { CAR_WASH_STATUSES, carWashesApi, type CarWashStatus } from '../api'
 import { Icon } from '../components/Icon'
 import { Button, EmptyState, ErrorBanner, PageHeader, Spinner, StatusBadge } from '../components/ui'
 import { formatDate, formatPhone, STATUS_LABEL } from '../lib/format'
@@ -12,7 +12,7 @@ const PAGE_SIZE = 20
 export function CarWashesPage() {
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
-  const status = (params.get('status') as Status | null) ?? undefined
+  const status = (params.get('status') as CarWashStatus | null) ?? undefined
   const page = Number(params.get('page') ?? 1)
   const [search, setSearch] = useState(params.get('q') ?? '')
   const q = useDebounced(search.trim())
@@ -59,7 +59,7 @@ export function CarWashesPage() {
           <button type="button" className={`chip ${!status ? 'chip-on' : ''}`} onClick={() => setFilter({ status: undefined })}>
             All
           </button>
-          {STATUSES.map((s) => (
+          {CAR_WASH_STATUSES.map((s) => (
             <button key={s} type="button" className={`chip ${status === s ? 'chip-on' : ''}`} onClick={() => setFilter({ status: s })}>
               {STATUS_LABEL[s]}
             </button>
@@ -98,7 +98,9 @@ export function CarWashesPage() {
                   <tr key={cw.id} className="clickable" onClick={() => navigate(`/car-washes/${cw.id}`)}>
                     <td>
                       <strong>{cw.name}</strong>
-                      <div className="muted mono">{cw.code}</div>
+                      <div className="muted mono">
+                        {cw.code} {cw.source === 'SELF_SIGNUP' && <span className="tag">Self sign-up</span>}
+                      </div>
                     </td>
                     <td>{[cw.city, cw.state].filter(Boolean).join(', ') || '—'}</td>
                     <td>{cw.phone ? formatPhone(cw.phone) : cw.email ?? '—'}</td>

@@ -4,14 +4,22 @@ import { carWashesApi } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { Icon, type IconName } from '../components/Icon'
 import { Button, Card, EmptyState, ErrorBanner, PageHeader, Spinner, StatusBadge } from '../components/ui'
-import { formatDate } from '../lib/format'
+import { SignupDecisionButtons } from '../components/SignupReview'
+import { formatDate, waitingFor } from '../lib/format'
 import { useAsync } from '../lib/useAsync'
+import { loadPendingSignups } from '../lib/signups'
 
 export function DashboardPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const stats = useAsync(() => carWashesApi.stats(), [])
   const recent = useAsync(() => carWashesApi.list({ limit: 6 }).then((r) => r.items), [])
+  const pending = useAsync(() => loadPendingSignups(5), [])
+  const refresh = () => {
+    pending.reload()
+    stats.reload()
+    recent.reload()
+  }
 
   return (
     <>
@@ -25,6 +33,37 @@ export function DashboardPage() {
         }
       />
 
+      {pending.data && pending.data.length > 0 && (
+        <Card
+          title={
+            <span className="title-with-badge">
+              Self sign-ups awaiting review <span className="badge badge-pending">{stats.data?.carWashes.pending ?? pending.data.length}</span>
+            </span>
+          }
+          actions={
+            <Link to="/sign-ups" className="link">
+              Review all
+            </Link>
+          }>
+          <ul className="list">
+            {pending.data.map((cw) => (
+              <li key={cw.id} className="list-row list-row-wrap">
+                <span className="list-icon">
+                  <Icon name="inbox" />
+                </span>
+                <Link to={`/car-washes/${cw.id}`} className="list-main">
+                  <strong>{cw.name}</strong>
+                  <span className="muted">
+                    {[cw.city, cw.gstNumber && `GSTIN ${cw.gstNumber}`, cw.owners?.[0]?.name, waitingFor(cw.createdAt)].filter(Boolean).join(' · ')}
+                  </span>
+                </Link>
+                <SignupDecisionButtons carWash={cw} onDecided={refresh} />
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
       {stats.error ? (
         <ErrorBanner message={stats.error} onRetry={stats.reload} />
       ) : !stats.data ? (
@@ -32,6 +71,7 @@ export function DashboardPage() {
       ) : (
         <div className="stats">
           <Stat icon="building" label="Car washes" value={stats.data.carWashes.total} to="/car-washes" />
+          <Stat icon="inbox" label="Pending review" value={stats.data.carWashes.pending} to="/sign-ups" />
           <Stat icon="play" label="Active" value={stats.data.carWashes.active} tone="success" to="/car-washes?status=ACTIVE" />
           <Stat icon="pause" label="Suspended" value={stats.data.carWashes.suspended} tone="warning" to="/car-washes?status=SUSPENDED" />
           <Stat icon="power" label="Inactive" value={stats.data.carWashes.inactive} tone="muted" to="/car-washes?status=INACTIVE" />

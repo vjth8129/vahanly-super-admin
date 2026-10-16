@@ -6,6 +6,10 @@ export type { Paged, Pagination } from './client'
 export const STATUSES = ['ACTIVE', 'SUSPENDED', 'INACTIVE'] as const
 export type Status = (typeof STATUSES)[number]
 
+/** Car washes can also be PENDING: signed up from the app and waiting for review. */
+export const CAR_WASH_STATUSES = ['PENDING', ...STATUSES] as const
+export type CarWashStatus = (typeof CAR_WASH_STATUSES)[number]
+
 export type AccountIdentifier = { phone: string } | { username: string }
 
 export type Me = {
@@ -32,7 +36,13 @@ export type CarWash = {
   state: string | null
   country: string | null
   postalCode: string | null
-  status: Status
+  latitude: number | null
+  longitude: number | null
+  /** GSTIN, e.g. 29ABCDE1234F1Z5. */
+  gstNumber: string | null
+  status: CarWashStatus
+  /** ADMIN: onboarded here. SELF_SIGNUP: the owner signed up from the app. */
+  source: 'ADMIN' | 'SELF_SIGNUP'
   timezone: string
   currency: string
   createdAt: string
@@ -40,17 +50,24 @@ export type CarWash = {
   deletedAt: string | null
   /** Only on list responses. */
   userCount?: number
+  /** Only on the detail response. */
+  owners?: CarWashOwner[]
 }
 
+export type CarWashOwner = { id: string; name: string; username: string; phone: string | null; email: string | null; createdAt: string }
+
 export type CarWashProfile = Partial<
-  Pick<CarWash, 'name' | 'code' | 'description' | 'phone' | 'email' | 'address' | 'city' | 'state' | 'country' | 'postalCode' | 'timezone' | 'currency'>
+  Pick<
+    CarWash,
+    'name' | 'code' | 'description' | 'phone' | 'email' | 'gstNumber' | 'address' | 'city' | 'state' | 'country' | 'postalCode' | 'latitude' | 'longitude' | 'timezone' | 'currency'
+  >
 >
 
 export type NewOwner = { name: string; phone: string; username: string; password: string; email?: string }
 export type OnboardedCarWash = CarWash & { owner?: { id: string; name: string; username: string; phone: string } }
 
 export type PlatformStats = {
-  carWashes: { total: number; active: number; suspended: number; inactive: number }
+  carWashes: { total: number; active: number; suspended: number; inactive: number; pending: number }
   users: { total: number; active: number }
   orders: { today: number; last30Days: number }
 }
@@ -98,12 +115,13 @@ export const authApi = {
 
 export const carWashesApi = {
   stats: () => http.get<PlatformStats>('/car-washes/stats'),
-  list: (q: { page?: number; limit?: number; search?: string; status?: Status } = {}) =>
+  list: (q: { page?: number; limit?: number; search?: string; status?: CarWashStatus } = {}) =>
     http.list<CarWash>('/car-washes', q),
   get: (id: string) => http.get<CarWash>(`/car-washes/${id}`),
   onboard: (body: CarWashProfile & { name: string; code: string; owner: NewOwner }) =>
     http.post<OnboardedCarWash>('/car-washes', body),
   update: (id: string, body: CarWashProfile) => http.patch<CarWash>(`/car-washes/${id}`, body),
+  /** Also how a pending sign-up is approved (ACTIVE) or rejected (INACTIVE). */
   setStatus: (id: string, status: Status) => http.patch<CarWash>(`/car-washes/${id}`, { status }),
 }
 

@@ -3,12 +3,13 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { carWashesApi, errorMessage, usersApi, type CarWash, type Status } from '../api'
 import { CarWashProfileFields } from '../components/CarWashProfileFields'
-import { EMPTY_PROFILE, toProfileBody, type ProfileForm } from '../lib/carWashProfile'
+import { SignupDecisionButtons, SignupDetails } from '../components/SignupReview'
+import { EMPTY_PROFILE, profileError, toProfileBody, type ProfileForm } from '../lib/carWashProfile'
 import { Icon, type IconName } from '../components/Icon'
 import { toast } from '../components/Toast'
 import { AddUserModal, UserTable } from '../components/UserTable'
 import { Button, Card, ErrorBanner, Modal, PageHeader, Spinner, StatusBadge } from '../components/ui'
-import { formatDate, formatPhone } from '../lib/format'
+import { formatDate, formatPhone, waitingFor } from '../lib/format'
 import { useAsync } from '../lib/useAsync'
 
 export function CarWashDetailPage() {
@@ -45,13 +46,37 @@ export function CarWashDetailPage() {
         subtitle={
           <span className="mono">
             {cw.code}
-            <span className="muted"> · onboarded {formatDate(cw.createdAt)}</span>
+            <span className="muted">
+              {' '}
+              · {cw.source === 'SELF_SIGNUP' ? 'signed up from the app' : 'onboarded'} {formatDate(cw.createdAt)}
+            </span>
           </span>
         }
-        actions={<StatusActions carWash={cw} onChanged={(updated) => carWash.setData(updated)} />}
+        actions={
+          cw.status === 'PENDING' ? (
+            <SignupDecisionButtons carWash={cw} onDecided={carWash.reload} />
+          ) : (
+            <StatusActions carWash={cw} onChanged={(updated) => carWash.setData(updated)} />
+          )
+        }
       />
 
-      {cw.status !== 'ACTIVE' && (
+      {cw.status === 'PENDING' && (
+        <>
+          <div className="notice notice-pending">
+            <Icon name="clock" />
+            <span>
+              Pending review ({waitingFor(cw.createdAt).toLowerCase()}) — the owner signed up from the app and can’t sign in until you approve it. They were told it
+              takes up to 2 hours.
+            </span>
+          </div>
+          <Card title="Sign-up details">
+            <SignupDetails carWash={cw} />
+          </Card>
+        </>
+      )}
+
+      {cw.status !== 'ACTIVE' && cw.status !== 'PENDING' && (
         <div className={`notice notice-${cw.status.toLowerCase()}`}>
           <Icon name={cw.status === 'SUSPENDED' ? 'pause' : 'power'} />
           <span>
@@ -107,7 +132,7 @@ function TeamTab({ carWash }: { carWash: CarWash }) {
 
 function toForm(cw: CarWash): ProfileForm {
   const form = { ...EMPTY_PROFILE }
-  for (const k of Object.keys(form) as (keyof ProfileForm)[]) form[k] = (cw[k] as string | null) ?? ''
+  for (const k of Object.keys(form) as (keyof ProfileForm)[]) form[k] = cw[k] == null ? '' : String(cw[k])
   return form
 }
 
@@ -119,6 +144,8 @@ function ProfileTab({ carWash, onSaved }: { carWash: CarWash; onSaved: (cw: CarW
 
   const save = async (e: FormEvent) => {
     e.preventDefault()
+    const problem = profileError(form)
+    if (problem) return setError(problem)
     setBusy(true)
     setError(null)
     try {
